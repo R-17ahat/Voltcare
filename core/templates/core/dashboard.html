@@ -1,0 +1,314 @@
+
+{% load static %}
+{% load tz %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard | VoltCare</title>
+
+    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body class="dashboard-page">
+
+<div class="dashboard-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="dashboard-sidebar">
+
+        <a href="{% url 'home' %}" class="brand dashboard-brand">
+            <span class="brand-icon">ϟ</span>
+            <span>
+                VOLT<span class="brand-light">CARE</span>
+                <small>POWERING BETTER SERVICE</small>
+            </span>
+        </a>
+
+        <div class="sidebar-label">CUSTOMER MENU</div>
+
+        <nav class="sidebar-nav">
+
+            <a href="{% url 'dashboard' %}" class="sidebar-link active">
+                <span>▦</span> Dashboard
+            </a>
+
+            <a href="{% url 'submit_complaint' %}" class="sidebar-link">
+                <span>＋</span> Submit Complaint
+            </a>
+
+            <a href="{% url 'track_complaint' %}" class="sidebar-link">
+                <span>◎</span> Track Complaint
+            </a>
+
+            <a href="{% url 'complaint_history' %}" class="sidebar-link">
+                <span>◷</span> Complaint History
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <a href="{% url 'home' %}" class="sidebar-link">
+                <span>⌂</span> Back to Website
+            </a>
+
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="sidebar-logout">
+                    <span>↗</span> Logout
+                </button>
+            </form>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main">
+
+        <!-- TOP BAR -->
+        <header class="dashboard-topbar">
+
+            <div>
+                <span class="section-tag">CUSTOMER PORTAL</span>
+                <h1>Dashboard</h1>
+                <p>Manage your electricity service requests.</p>
+            </div>
+
+            <div class="dashboard-user">
+
+                <div class="user-avatar">
+                    {{ user.first_name|default:user.username|first|upper }}
+                </div>
+
+                <div>
+                    <strong>{{ user.first_name|default:user.username }}</strong>
+                    <small>Customer Account</small>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- SUCCESS AND ERROR MESSAGES -->
+        {% if messages %}
+            <div class="dashboard-messages">
+
+                {% for message in messages %}
+                    <div class="dashboard-message {{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+
+            </div>
+        {% endif %}
+
+
+        <!-- WELCOME SECTION -->
+        <section class="dashboard-welcome">
+
+            <div>
+                <span>WELCOME TO VOLTCARE</span>
+
+                <h2>
+                    Hello, {{ user.first_name|default:user.username }}!
+                </h2>
+
+                <p>
+                    Manage your electricity complaints and stay
+                    updated on your service requests.
+                </p>
+            </div>
+
+            <div class="welcome-symbol">ϟ</div>
+
+        </section>
+
+
+        <!-- STATISTICS -->
+        <section class="dashboard-stats">
+
+            <article class="dashboard-stat-card">
+                <div class="dashboard-stat-icon blue">▤</div>
+                <span>Total Complaints</span>
+                <strong>{{ total_complaints }}</strong>
+                <small>Your submitted complaints</small>
+            </article>
+
+            <article class="dashboard-stat-card">
+                <div class="dashboard-stat-icon orange">◷</div>
+                <span>Pending</span>
+                <strong>{{ pending_complaints }}</strong>
+                <small>Awaiting resolution</small>
+            </article>
+
+            <article class="dashboard-stat-card">
+                <div class="dashboard-stat-icon green">✓</div>
+                <span>Resolved</span>
+                <strong>{{ resolved_complaints }}</strong>
+                <small>Successfully completed</small>
+            </article>
+
+        </section>
+
+
+        <!-- QUICK ACTIONS -->
+        <section class="dashboard-section">
+
+            <div class="dashboard-section-heading">
+                <div>
+                    <span class="section-tag">QUICK ACCESS</span>
+                    <h2>What would you like to do?</h2>
+                </div>
+            </div>
+
+            <div class="dashboard-actions">
+
+                <a href="{% url 'submit_complaint' %}" class="dashboard-action-card">
+
+                    <div class="action-icon blue">＋</div>
+
+                    <h3>Submit a Complaint</h3>
+
+                    <p>
+                        Report an electricity-related issue
+                        to the service department.
+                    </p>
+
+                    <span class="action-coming">Submit now →</span>
+
+                </a>
+
+
+                <a href="{% url 'track_complaint' %}" class="dashboard-action-card">
+
+                    <div class="action-icon cyan">◎</div>
+
+                    <h3>Track a Complaint</h3>
+
+                    <p>
+                        Check the latest status of your
+                        submitted complaints.
+                    </p>
+
+                    <span class="action-coming">Track now →</span>
+
+                </a>
+
+
+                <a href="{% url 'complaint_history' %}" class="dashboard-action-card">
+
+                    <div class="action-icon green">◷</div>
+
+                    <h3>Complaint History</h3>
+
+                    <p>
+                        View all your previous electricity
+                        service requests.
+                    </p>
+
+                    <span class="action-coming">View history →</span>
+
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- RECENT COMPLAINTS -->
+        <section class="dashboard-section" id="recent-complaints">
+
+            <div class="dashboard-section-heading">
+
+                <div>
+                    <span class="section-tag">SERVICE ACTIVITY</span>
+                    <h2>Recent Complaints</h2>
+                </div>
+
+                <a href="{% url 'complaint_history' %}" class="action-coming">
+                    View All →
+                </a>
+
+            </div>
+
+
+            {% if complaints %}
+
+                <div class="complaints-list">
+
+                    {% for complaint in complaints %}
+
+                        <article class="complaint-item">
+
+                            <div class="complaint-item-header">
+
+                                <div>
+                                    <strong>{{ complaint.complaint_id }}</strong>
+                                    <span>{{ complaint.get_category_display }}</span>
+                                </div>
+
+                                <span class="complaint-status {{ complaint.status }}">
+                                    {{ complaint.get_status_display }}
+                                </span>
+
+                            </div>
+
+                            <h3>{{ complaint.subject }}</h3>
+
+                            <p>
+                                {{ complaint.description|truncatewords:20 }}
+                            </p>
+
+                            <small>
+                                Submitted on:
+                                {{ complaint.created_at|localtime|date:"d M Y, h:i A" }}
+                            </small>
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="dashboard-empty">
+
+                    <div class="empty-icon">▤</div>
+
+                    <h3>No complaints yet</h3>
+
+                    <p>
+                        Your submitted electricity complaints
+                        will appear here.
+                    </p>
+
+                    <a href="{% url 'submit_complaint' %}" class="action-coming">
+                        Submit your first complaint →
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- FOOTER -->
+        <footer class="dashboard-footer">
+            © 2026 VoltCare. Electricity services, simplified.
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,217 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Complaint | VoltCare</title>
+    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+</head>
+
+<body>
+
+<div class="dashboard-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="dashboard-sidebar">
+
+        <div class="dashboard-brand">
+            <span class="brand-icon">ϟ</span>
+            <div>
+                <h2>VOLTCARE</h2>
+                <p>POWERING BETTER SERVICE</p>
+            </div>
+        </div>
+
+        <div class="sidebar-label">CUSTOMER MENU</div>
+
+        <nav class="sidebar-nav">
+            <a href="{% url 'dashboard' %}" class="sidebar-link">
+                ▦ &nbsp; Dashboard
+            </a>
+
+            <a href="{% url 'submit_complaint' %}" class="sidebar-link">
+                + &nbsp; Submit Complaint
+            </a>
+
+            <a href="{% url 'track_complaint' %}" class="sidebar-link active">
+                ◎ &nbsp; Track Complaint
+            </a>
+
+            <a href="{% url 'complaint_history' %}" class="sidebar-link">
+                ◷ &nbsp; Complaint History
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <a href="{% url 'home' %}" class="sidebar-link">
+                ⌂ &nbsp; Back to Website
+            </a>
+
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="sidebar-logout">
+                    ↗ &nbsp; Logout
+                </button>
+            </form>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main">
+
+        <header class="dashboard-header">
+            <div>
+                <p class="section-label">CUSTOMER PORTAL</p>
+                <h1>Track Complaint</h1>
+            </div>
+
+            <div class="user-profile">
+                <div class="profile-avatar">
+                    {{ request.user.first_name|default:request.user.username|first|upper }}
+                </div>
+                <div>
+                    <strong>
+                        {{ request.user.first_name|default:request.user.username }}
+                    </strong>
+                    <span>Customer Account</span>
+                </div>
+            </div>
+        </header>
+
+
+        <!-- INTRODUCTION -->
+        <section class="dashboard-welcome">
+            <div>
+                <p class="section-label">STAY UPDATED</p>
+                <h2>Track Your Service Request</h2>
+                <p>
+                    Enter your unique VoltCare Complaint ID to check
+                    the latest status of your complaint.
+                </p>
+            </div>
+
+            <div class="welcome-symbol">ϟ</div>
+        </section>
+
+
+        <!-- COMPLAINT SEARCH -->
+        <section class="tracking-search-section">
+
+            <p class="section-label">COMPLAINT SEARCH</p>
+            <h2>Enter Complaint ID</h2>
+
+            <form method="POST" action="{% url 'track_complaint' %}">
+                {% csrf_token %}
+
+                <label for="complaint_id">Your Complaint ID</label>
+
+                <input
+                    type="text"
+                    id="complaint_id"
+                    name="complaint_id"
+                    class="form-input"
+                    placeholder="Example: VC1234567890"
+                    value="{{ complaint_id }}"
+                    required
+                >
+
+                <div class="tracking-actions">
+                    <a href="{% url 'dashboard' %}">
+                        Back to Dashboard
+                    </a>
+
+                    <button type="submit" class="btn-primary">
+                        Track Complaint →
+                    </button>
+                </div>
+            </form>
+
+            {% if error %}
+                <p class="form-error">{{ error }}</p>
+            {% endif %}
+
+        </section>
+
+
+        <!-- TRACKING RESULT -->
+        {% if complaint %}
+
+        <section class="tracking-result-section">
+
+            <p class="section-label">TRACKING RESULT</p>
+            <h2>Complaint Details</h2>
+
+            <div class="tracking-card">
+
+                <div class="tracking-card-header">
+                    <div>
+                        <span>COMPLAINT ID</span>
+                        <h2>{{ complaint.complaint_id }}</h2>
+                    </div>
+
+                    <span class="status-badge status-{{ complaint.status }}">
+                        {{ complaint.get_status_display }}
+                    </span>
+                </div>
+
+                <div class="tracking-details-grid">
+
+                    <div>
+                        <span>CATEGORY</span>
+                        <strong>{{ complaint.get_category_display }}</strong>
+                    </div>
+
+                    <div>
+                        <span>SUBJECT</span>
+                        <strong>{{ complaint.subject }}</strong>
+                    </div>
+
+                    <div>
+                        <span>PRIORITY</span>
+                        <strong>{{ complaint.get_priority_display }}</strong>
+                    </div>
+
+                    <div>
+                        <span>LOCATION</span>
+                        <strong>{{ complaint.address }}</strong>
+                    </div>
+
+                    <div>
+                        <span>SUBMITTED ON</span>
+                        <strong>{{ complaint.created_at|date:"d M Y, h:i A" }}</strong>
+                    </div>
+
+                    <div>
+                        <span>LAST UPDATED</span>
+                        <strong>{{ complaint.updated_at|date:"d M Y, h:i A" }}</strong>
+                    </div>
+
+                </div>
+
+                <div class="tracking-description">
+                    <span>ISSUE DESCRIPTION</span>
+                    <p>{{ complaint.description }}</p>
+                </div>
+
+            </div>
+
+        </section>
+
+        {% endif %}
+
+
+        <!-- FOOTER -->
+        <footer class="dashboard-footer">
+            © 2026 VoltCare. Electricity services, simplified.
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+</html>

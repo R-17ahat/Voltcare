@@ -1,0 +1,125 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Registration | VoltCare</title>
+
+    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+</head>
+
+<body class="auth-page">
+
+    <nav class="navbar">
+        <a href="/" class="brand">
+            <span class="brand-icon">ϟ</span>
+            <span>
+                <strong>VOLTCARE</strong>
+                <small>POWERING BETTER SERVICE</small>
+            </span>
+        </a>
+
+        <a href="/" class="auth-home-link">Back to Home</a>
+    </nav>
+
+    <main class="auth-container">
+
+        <section class="auth-intro">
+            <span class="section-tag">WELCOME TO VOLTCARE</span>
+
+            <h1>Your electricity services, all in one place.</h1>
+
+            <p>
+                Create your account to report electricity issues,
+                track complaints and stay updated on service requests.
+            </p>
+
+            <div class="auth-benefits">
+                <div>✓ Easy complaint registration</div>
+                <div>✓ Real-time complaint tracking</div>
+                <div>✓ Reliable service support</div>
+            </div>
+        </section>
+
+        <section class="auth-card">
+
+            <div class="auth-card-heading">
+                <h2>Create your account</h2>
+                <p>Enter your details to get started.</p>
+            </div>
+
+            <form method="POST" class="auth-form">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="form-errors">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.first_name.id_for_label }}">
+                            First name
+                        </label>
+                        {{ form.first_name }}
+                        {{ form.first_name.errors }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.last_name.id_for_label }}">
+                            Last name
+                        </label>
+                        {{ form.last_name }}
+                        {{ form.last_name.errors }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">
+                        Email address
+                    </label>
+                    {{ form.email }}
+                    {{ form.email.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}">
+                        Username
+                    </label>
+                    {{ form.username }}
+                    {{ form.username.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.password1.id_for_label }}">
+                        Password
+                    </label>
+                    {{ form.password1 }}
+                    {{ form.password1.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.password2.id_for_label }}">
+                        Confirm password
+                    </label>
+                    {{ form.password2 }}
+                    {{ form.password2.errors }}
+                </div>
+
+                <button type="submit" class="auth-submit">
+                    Create Account →
+                </button>
+            </form>
+
+            <p class="auth-switch">
+                Already have an account?
+                <a href="{% url 'login' %}">Login here</a>
+            </p>
+
+        </section>
+    </main>
+
+</body>
+</html>

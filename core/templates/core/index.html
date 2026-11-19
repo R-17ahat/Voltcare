@@ -1,0 +1,363 @@
+<
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoltCare | Electricity Services</title>
+
+    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- NAVIGATION -->
+<header class="navbar">
+
+    <a href="/" class="brand">
+        <span class="brand-icon">ϟ</span>
+        <span>
+            VOLT<span class="brand-light">CARE</span>
+            <small>POWERING BETTER SERVICE</small>
+        </span>
+    </a>
+
+    <nav class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#services">Services</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#about">About Us</a>
+    </nav>
+
+    <div class="nav-actions">
+
+        {% if user.is_authenticated %}
+
+            <span class="login-link">
+                Welcome, {{ user.first_name|default:user.username }}
+            </span>
+
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="nav-button">
+                    Logout →
+                </button>
+            </form>
+
+        {% else %}
+
+            <a href="{% url 'login' %}" class="login-link">
+                Login
+            </a>
+
+            <a href="{% url 'register' %}" class="nav-button">
+                Register →
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</header>
+
+<main>
+
+    <!-- HERO SECTION -->
+    <section class="hero" id="home">
+
+        <div class="hero-grid"></div>
+
+        <div class="hero-content">
+
+            <div class="eyebrow">
+                <span class="live-dot"></span>
+                DIGITAL ELECTRICITY SERVICE PLATFORM
+            </div>
+
+            <h1>
+                Electricity services.<br>
+                <span>Simplified.</span> Connected.
+            </h1>
+
+            <p class="hero-description">
+                A smarter way to report electricity issues, track complaints
+                and stay connected with your electricity service department.
+                We're here to keep your power running.
+            </p>
+
+            <div class="hero-buttons">
+
+                {% if user.is_authenticated %}
+                    <a href="#services" class="primary-button">
+                        Explore Services →
+                    </a>
+                {% else %}
+                    <a href="{% url 'register' %}" class="primary-button">
+                        Register a Complaint →
+                    </a>
+                {% endif %}
+
+                <a href="#track" class="secondary-button">
+                    Track Your Complaint ↗
+                </a>
+
+            </div>
+
+            <div class="trust-note">
+                <span>✓</span> Transparent service
+                &nbsp; <span>✓</span> Easy tracking
+                &nbsp; <span>✓</span> Reliable support
+            </div>
+
+        </div>
+
+        <!-- HERO GRAPHIC -->
+        <div class="hero-visual">
+
+            <div class="orbit orbit-one"></div>
+            <div class="orbit orbit-two"></div>
+
+            <div class="energy-core">
+                <span class="big-bolt">ϟ</span>
+            </div>
+
+            <div class="floating-card card-top">
+                <span class="mini-icon">⚡</span>
+
+                <div>
+                    <strong>Smart Service</strong>
+                    <small>Digital complaint management</small>
+                </div>
+
+                <span class="green-check">✓</span>
+            </div>
+
+            <div class="floating-card card-bottom">
+                <div class="status-indicator"></div>
+
+                <div>
+                    <strong>Service Tracking</strong>
+                    <small>Stay updated on your complaint</small>
+                </div>
+            </div>
+
+            <div class="visual-label">
+                POWERING A CONNECTED FUTURE
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- STATISTICS STRIP -->
+    <section class="stats-strip">
+
+        <div class="stat">
+            <span class="stat-icon">⚡</span>
+            <div>
+                <strong>Easy</strong>
+                <small>Complaint Registration</small>
+            </div>
+        </div>
+
+        <div class="stat">
+            <span class="stat-icon">◎</span>
+            <div>
+                <strong>Transparent</strong>
+                <small>Complaint Tracking</small>
+            </div>
+        </div>
+
+        <div class="stat">
+            <span class="stat-icon">↗</span>
+            <div>
+                <strong>Connected</strong>
+                <small>Service Management</small>
+            </div>
+        </div>
+
+        <div class="stat">
+            <span class="stat-icon">✓</span>
+            <div>
+                <strong>Reliable</strong>
+                <small>Customer Support</small>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- SERVICES -->
+    <section class="services section" id="services">
+
+        <div class="section-heading">
+            <span class="section-tag">OUR SERVICES</span>
+
+            <h2>
+                Everything you need,<br>
+                <span>in one place.</span>
+            </h2>
+
+            <p>
+                Access electricity complaint services through one convenient platform.
+            </p>
+        </div>
+
+        <div class="service-grid">
+
+            <article class="service-card" id="register">
+
+                <div class="service-icon blue">＋</div>
+                <span class="card-number">01</span>
+
+                <h3>Register a Complaint</h3>
+
+                <p>
+                    Report power outages, voltage fluctuations,
+                    damaged lines and other electricity-related issues.
+                </p>
+
+                <a href="{% url 'register' %}">
+                    Get started →
+                </a>
+
+            </article>
+
+            <article class="service-card" id="track">
+
+                <div class="service-icon cyan">◎</div>
+                <span class="card-number">02</span>
+
+                <h3>Track Your Complaint</h3>
+
+                <p>
+                    Check the progress of your complaint using
+                    its unique reference number.
+                </p>
+
+                <a href="#track">
+                    Tracking coming soon →
+                </a>
+
+            </article>
+
+            <article class="service-card">
+
+                <div class="service-icon green">✓</div>
+                <span class="card-number">03</span>
+
+                <h3>Service Updates</h3>
+
+                <p>
+                    Stay informed about complaint progress
+                    and resolution updates.
+                </p>
+
+                <a href="#how-it-works">
+                    Learn more →
+                </a>
+
+            </article>
+
+        </div>
+
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="process-section" id="how-it-works">
+
+        <div class="section-heading">
+
+            <span class="section-tag">SIMPLE PROCESS</span>
+
+            <h2>
+                From complaint to <span>resolution.</span>
+            </h2>
+
+            <p>
+                Three simple steps to get your electricity issues addressed.
+            </p>
+
+        </div>
+
+        <div class="process-grid">
+
+            <div class="process-step">
+                <div class="step-circle">01</div>
+                <h3>Submit</h3>
+                <p>
+                    Register your electricity complaint with the relevant details.
+                </p>
+            </div>
+
+            <div class="process-step">
+                <div class="step-circle">02</div>
+                <h3>Track</h3>
+                <p>
+                    Receive a unique complaint ID and monitor its progress.
+                </p>
+            </div>
+
+            <div class="process-step">
+                <div class="step-circle">03</div>
+                <h3>Resolve</h3>
+                <p>
+                    Follow updates as the department works towards resolution.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- CALL TO ACTION -->
+    <section class="cta-section" id="about">
+
+        <div>
+            <span class="section-tag">VOLTCARE SERVICE PORTAL</span>
+
+            <h2>
+                We're making electricity services<br>
+                more accessible.
+            </h2>
+
+            <p>
+                One platform. Better communication.
+                Smarter service management.
+            </p>
+        </div>
+
+        <a href="{% url 'register' %}" class="primary-button">
+            Get Started →
+        </a>
+
+    </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+
+    <a href="/" class="brand footer-brand">
+        <span class="brand-icon">ϟ</span>
+        <span>
+            VOLT<span class="brand-light">CARE</span>
+            <small>POWERING BETTER SERVICE</small>
+        </span>
+    </a>
+
+    <p>
+        © 2026 VoltCare. Electricity services, simplified.
+    </p>
+
+    <span class="footer-status">
+        <span class="live-dot"></span>
+        Digital Service Platform
+    </span>
+
+</footer>
+
+</body>
+</html>

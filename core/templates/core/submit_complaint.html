@@ -1,0 +1,155 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Complaint | VoltCare</title>
+
+    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body class="dashboard-page">
+
+<div class="dashboard-layout">
+
+    <aside class="dashboard-sidebar">
+
+        <a href="/" class="brand dashboard-brand">
+            <span class="brand-icon">ϟ</span>
+            <span>
+                VOLT<span class="brand-light">CARE</span>
+                <small>POWERING BETTER SERVICE</small>
+            </span>
+        </a>
+
+        <div class="sidebar-label">CUSTOMER MENU</div>
+
+        <nav class="sidebar-nav">
+            <a href="{% url 'dashboard' %}" class="sidebar-link">
+                <span>▦</span> Dashboard
+            </a>
+
+            <a href="{% url 'submit_complaint' %}" class="sidebar-link active">
+                <span>＋</span> Submit Complaint
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <a href="/" class="sidebar-link">
+                <span>⌂</span> Back to Website
+            </a>
+
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="sidebar-logout">
+                    <span>↗</span> Logout
+                </button>
+            </form>
+        </div>
+
+    </aside>
+
+    <main class="dashboard-main">
+
+        <header class="dashboard-topbar">
+            <div>
+                <span class="section-tag">CUSTOMER PORTAL</span>
+                <h1>Submit a Complaint</h1>
+            </div>
+
+            <div class="dashboard-user">
+                <div class="user-avatar">
+                    {{ user.first_name|default:user.username|first|upper }}
+                </div>
+
+                <div>
+                    <strong>{{ user.first_name|default:user.username }}</strong>
+                    <small>Customer Account</small>
+                </div>
+            </div>
+        </header>
+
+        <section class="complaint-form-card">
+
+            <div class="complaint-form-heading">
+                <span class="section-tag">SERVICE REQUEST</span>
+                <h2>Tell us about your electricity issue</h2>
+                <p>
+                    Please provide accurate information so that
+                    your complaint can be reviewed.
+                </p>
+            </div>
+
+            <form method="POST" class="complaint-form">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="form-errors">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="{{ form.category.id_for_label }}">
+                        Complaint Category *
+                    </label>
+                    {{ form.category }}
+                    {{ form.category.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.subject.id_for_label }}">
+                        Complaint Subject *
+                    </label>
+                    {{ form.subject }}
+                    {{ form.subject.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.description.id_for_label }}">
+                        Describe Your Issue *
+                    </label>
+                    {{ form.description }}
+                    {{ form.description.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.address.id_for_label }}">
+                        Location / Service Address *
+                    </label>
+                    {{ form.address }}
+                    {{ form.address.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.contact_number.id_for_label }}">
+                        Contact Number *
+                    </label>
+                    {{ form.contact_number }}
+                    {{ form.contact_number.errors }}
+                </div>
+
+                <div class="complaint-form-actions">
+                    <a href="{% url 'dashboard' %}" class="secondary-button">
+                        Cancel
+                    </a>
+
+                    <button type="submit" class="auth-submit">
+                        Submit Complaint →
+                    </button>
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

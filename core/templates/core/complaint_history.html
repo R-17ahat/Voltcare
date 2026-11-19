@@ -1,0 +1,268 @@
+
+{% load static %}
+{% load tz %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint History | VoltCare</title>
+
+    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body class="dashboard-page">
+
+<div class="dashboard-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="dashboard-sidebar">
+
+        <a href="{% url 'home' %}" class="brand dashboard-brand">
+            <span class="brand-icon">ϟ</span>
+            <span>
+                VOLT<span class="brand-light">CARE</span>
+                <small>POWERING BETTER SERVICE</small>
+            </span>
+        </a>
+
+        <div class="sidebar-label">CUSTOMER MENU</div>
+
+        <nav class="sidebar-nav">
+
+            <a href="{% url 'dashboard' %}" class="sidebar-link">
+                <span>▦</span> Dashboard
+            </a>
+
+            <a href="{% url 'submit_complaint' %}" class="sidebar-link">
+                <span>＋</span> Submit Complaint
+            </a>
+
+            <a href="{% url 'track_complaint' %}" class="sidebar-link">
+                <span>◎</span> Track Complaint
+            </a>
+
+            <a href="{% url 'complaint_history' %}" class="sidebar-link active">
+                <span>◷</span> Complaint History
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <a href="{% url 'home' %}" class="sidebar-link">
+                <span>⌂</span> Back to Website
+            </a>
+
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="sidebar-logout">
+                    <span>↗</span> Logout
+                </button>
+            </form>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main">
+
+        <!-- TOP BAR -->
+        <header class="dashboard-topbar">
+
+            <div>
+                <span class="section-tag">CUSTOMER PORTAL</span>
+                <h1>Complaint History</h1>
+                <p>View and manage your submitted electricity complaints.</p>
+            </div>
+
+            <div class="dashboard-user">
+
+                <div class="user-avatar">
+                    {{ user.first_name|default:user.username|first|upper }}
+                </div>
+
+                <div>
+                    <strong>{{ user.first_name|default:user.username }}</strong>
+                    <small>Customer Account</small>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- WELCOME SECTION -->
+        <section class="dashboard-welcome">
+
+            <div>
+                <span>YOUR SERVICE RECORD</span>
+
+                <h2>All Your Complaints in One Place</h2>
+
+                <p>
+                    Review your complaint records, check their current
+                    status and access individual tracking details.
+                </p>
+            </div>
+
+            <div class="welcome-symbol">◷</div>
+
+        </section>
+
+
+        <!-- STATISTICS -->
+        <section class="history-stats">
+
+            <div class="history-stat-card">
+                <div class="history-stat-icon blue">▤</div>
+                <div>
+                    <small>Total Complaints</small>
+                    <h2>{{ total_complaints }}</h2>
+                </div>
+            </div>
+
+            <div class="history-stat-card">
+                <div class="history-stat-icon orange">◷</div>
+                <div>
+                    <small>Pending Complaints</small>
+                    <h2>{{ pending_complaints }}</h2>
+                </div>
+            </div>
+
+            <div class="history-stat-card">
+                <div class="history-stat-icon green">✓</div>
+                <div>
+                    <small>Resolved Complaints</small>
+                    <h2>{{ resolved_complaints }}</h2>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- COMPLAINT HISTORY TABLE -->
+        <section class="history-section">
+
+            <div class="history-section-header">
+
+                <div>
+                    <span class="section-tag">YOUR RECORDS</span>
+                    <h2>All Submitted Complaints</h2>
+                    <p>Showing your complaints from newest to oldest.</p>
+                </div>
+
+                <a href="{% url 'submit_complaint' %}" class="history-new-button">
+                    + New Complaint
+                </a>
+
+            </div>
+
+
+            {% if complaints %}
+
+            <div class="history-table-wrapper">
+
+                <table class="history-table">
+
+                    <thead>
+                        <tr>
+                            <th>COMPLAINT ID</th>
+                            <th>SUBJECT</th>
+                            <th>CATEGORY</th>
+                            <th>DATE SUBMITTED</th>
+                            <th>STATUS</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for complaint in complaints %}
+
+                        <tr>
+
+                            <td>
+                                <strong class="history-complaint-id">
+                                    {{ complaint.complaint_id }}
+                                </strong>
+                            </td>
+
+                            <td>
+                                <span class="history-subject">
+                                    {{ complaint.subject }}
+                                </span>
+                            </td>
+
+                            <td>
+                                {{ complaint.get_category_display }}
+                            </td>
+
+                            <td>
+                                {{ complaint.created_at|localtime|date:"d M Y" }}
+                            </td>
+
+                            <td>
+                                <span class="complaint-status {{ complaint.status }}">
+                                    {{ complaint.get_status_display }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <a
+                                    href="{% url 'track_complaint' %}?complaint_id={{ complaint.complaint_id }}"
+                                    class="history-track-link"
+                                >
+                                    Track →
+                                </a>
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="history-empty">
+
+                <div class="history-empty-icon">▤</div>
+
+                <h3>No Complaints Yet</h3>
+
+                <p>
+                    You haven't submitted any electricity complaints.
+                    Once you submit one, it will appear here.
+                </p>
+
+                <a href="{% url 'submit_complaint' %}" class="history-new-button">
+                    Submit Your First Complaint →
+                </a>
+
+            </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- FOOTER -->
+        <footer class="dashboard-footer">
+            © 2026 VoltCare. Electricity services, simplified.
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+</html>
